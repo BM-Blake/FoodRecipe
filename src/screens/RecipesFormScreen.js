@@ -12,14 +12,23 @@ export default function RecipesFormScreen({ route, navigation }) {
   );
 
   const saverecipe = async () => {
-    const newrecipe = {
-      title,
-      image,
-      description,
-    };
     try {
       const existingRecipes = await AsyncStorage.getItem("recipes");
       const recipes = existingRecipes ? JSON.parse(existingRecipes) : [];
+      let idFood;
+      if (recipeToEdit !== undefined) {
+        // Keep the same id for editing
+        idFood = recipeToEdit.idFood;
+      } else {
+        // Generate idFood as "c1", "c2", etc.
+        idFood = `c${recipes.length + 1}`;
+      }
+      const newrecipe = {
+        title,
+        idFood,
+        image,
+        description,
+      };
       // If editing a recipe, update it; otherwise, add a new one
       if (recipeToEdit !== undefined) {
         recipes[recipeIndex] = newrecipe;
